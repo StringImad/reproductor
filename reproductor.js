@@ -1,16 +1,13 @@
-//Array con el listado de canciones a mostrar en el reproductor
+//Array donde vamos a guardar el nombre de todas las canciones
 const canciones = [
-"Under the Bridge.mp3",
-"Tracy Chapman.mp3",
-"The sound of silence.mp3",
-"Blur.mp3",
-"Time has told me.mp3",
-"A change is gonna come.mp3",
-"Make you feel my love.mp3"
+"hotel-california.m4a",
+"the back street boys",
+"From shakira to Pique",
+
 ]
 var indiceActual = new Array(1)
-//Funcion para crear mediante javascript el listado de canciones
-function crearPlayList(){
+//creamos el listado de canciones 
+const crearPlayList=() =>{
 	const listado = document.createElement('ol')
 	listado.setAttribute("id", 'listadoMusica')
 	for (let i = 0; i<canciones.length; i++){
@@ -54,9 +51,9 @@ const updateProgress = () =>{
 		barra.value = (player.currentTime / player.duration) * 100
 		
 		var duracionSegundos= player.duration.toFixed(0);
-		dura=secondsToString(duracionSegundos);
+		dura=segundosToString(duracionSegundos);
 		var actualSegundos = player.currentTime.toFixed(0)
-		actual=secondsToString(actualSegundos);
+		actual=segundosToString(actualSegundos);
 		
 		duracion= actual +' / '+ dura
 		document.getElementById('timer').innerText=duracion 
@@ -64,6 +61,14 @@ const updateProgress = () =>{
 	if (player.ended){
 		nextMusic();//Reproducir la siguiente pista
 	} 
+}
+//funcion para volver hacia atras 10 segundos
+function backTenSeconds(){
+	var audio = document.getElementById("player");
+	audio.currentTime -= 10;
+	if(audio.currentTime > 10) {
+		audio.currentTime -= 10;
+	}
 }
 //Funcion para reproducir la proxima cancion
 function nextMusic(){  
@@ -146,20 +151,24 @@ progress.addEventListener('click', adelantar);
 function adelantar(e){
 	const scrubTime = (e.offsetX / progress.offsetWidth) * player.duration;
 	player.currentTime = scrubTime;
-	sonsole.log(e);
+	console.log(e);
 }
-//Funcion para convertir segundos a minutos y horas
-function secondsToString(seconds) {
-	var hour="";
-	if (seconds>3600){
-		hour = Math.floor(seconds / 3600);
-		hour = (hour < 10)? '0' + hour : hour;
-		hour+=":"
+//Conviertidor de segundos, recibe el parametro en segundos y devueve la conversion
+const segundosToString =(segundos)=> {
+	var hora="";
+	//si los segundos son mayores de 3600 segundos es decir una hora 
+	if (segundos>3600){
+		//hacemos la conversion y redondeamos
+		hora = Math.floor(segundos / 3600);
+		//si las horas son menor de 10 le añadimos un 0, para que mejore visualmente 
+		hora = (hora < 10)? '0' + hora : hora;
+		hora+=":"
 	}
-   var minute = Math.floor((seconds / 60) % 60);
-  minute = (minute < 10)? '0' + minute : minute;
-  var second = seconds % 60;
+	//hacemos el mismo proceso para los minuitos y los segundos
+   var minuto = Math.floor((segundos / 60) % 60);
+  minuto = (minuto < 10)? '0' + minuto : minuto;
+  var second = segundos % 60;
   second = (second < 10)? '0' + second : second;
-  return hour  + minute + ':' + second;
+  return hora  + minuto + ':' + second;
 }
 loadMusic(canciones[0])
